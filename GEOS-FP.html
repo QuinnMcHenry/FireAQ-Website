@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.sidenav {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #236192;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a, .dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #FFCD00;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
+  color: white;
+}
+
+/* Main content */
+.main {
+  margin-left: 200px; /* Same as the width of the sidenav */
+  font-size: 20px; /* Increased text to enable scrolling */
+  padding: 0px 10px;
+}
+
+/* Add an active class to the active dropdown button */
+.active {
+  background-color: green;
+  color: white;
+}
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  float: right;
+  padding-right: 8px;
+}
+.btn {
+border: none;
+outline: none;
+background-color: #236192;
+padding: 10px 30px;
+font-size: 20px;
+color: white;
+cursor: pointer;
+margin: 10px auto;
+}
+.btn button {
+border-radius: 50px;
+}
+.btn:hover {
+background-color: #FFCD00;
+}
+/* Some media queries for responsiveness */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+</style>
+</head>
+<body>
+    <div class="sidenav">
+      <center>
+      <img src="pics/UAFLogo_A_116.png" id=logo  alt="" width="170" height="170" text-align:"center"/>
+      </center>
+      <a href="HOME.html">Home</a>
+      <button class="dropdown-btn">PM2.5 Forecast
+        <i class="fa fa-caret-down"></i>
+      </button>
+      <div class="dropdown-container">
+        <a href="GEOS-FP.html">GEOS-FP</a>
+        <a href="GEOS-CF.html">GEOS-CF</a>
+        <a href="HRRR-SMOKE.html">HRRR-Smoke</a>
+        <a href="PURPLE.html">Purple Air</a>
+      </div>
+      <a href="FORE-OBS.html">Observation</a>
+      <a href="ABOUT.html">About</a>
+    </div>
+    <div class="maincontent">
+      <div class="slider" style="width:100%; text-align:center">
+        <h1>GEOS-FP Forecast</h1>
+        <div class="img-box">
+          <img src="data/GEOS_FP/GEOS_FP_0.png" name="slide" class="slider-img" id="slideShow" alt="" width="800" height="800" text-align:"center">
+        </div>
+        <button class="btn" id="prevBtn">Previous</button>
+        <button class="btn" id="pause">Pause</button>
+        <button class="btn" id="nextBtn">Next</button>
+      </div>
+    </div>
+<script>
+/* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+var dropdown = document.getElementsByClassName("dropdown-btn");
+var i;
+
+for (i = 0; i < dropdown.length; i++) {
+  dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+    } else {
+      dropdownContent.style.display = "block";
+    }
+  });
+}
+</script>
+<script>
+(function(global) {
+var time = 1000; //Three seconds delay between each image
+var slider_img = document.querySelector('.slider-img');
+var images = ['GEOS_FP_0.png','GEOS_FP_1.png', 'GEOS_FP_2.png','GEOS_FP_3.png',
+'GEOS_FP_4.png','GEOS_FP_5.png','GEOS_FP_6.png','GEOS_FP_7.png','GEOS_FP_8.png',
+'GEOS_FP_9.png','GEOS_FP_10.png','GEOS_FP_11.png','GEOS_FP_12.png','GEOS_FP_13.png',
+'GEOS_FP_14.png','GEOS_FP_15.png','GEOS_FP_16.png'];
+var i = 0; //Current Image index
+let imageID;
+var pauseButton = document.getElementById('pause');
+var playing = true;
+function extendFeatures(a, b) {}
+function JaiylonSlideshow(c, options) {
+}
+JaiylonSlideshow.prototype = {
+changeImg: function() {
+JaiylonSlideshow.prototype.setImg();
+// Check If Index Is Under Max
+if (i < images.length - 1) {
+// Add 1 to Index
+i++;
+} else {
+// Reset Back To O
+i = 0;
+}
+},
+
+next: function() { //Function to go to the next image
+if (i >= images.length - 1) i = -1;
+i++;
+JaiylonSlideshow.prototype.setImg();
+},
+
+prev: function() { //Function to go to the previous image displayed
+if (i <= 0) i = images.length;
+i--;
+JaiylonSlideshow.prototype.setImg();
+},
+
+pauseSlideshow: function() { // This is the pause function it takes the imageID which sets the interval to play, and stops it.
+pauseButton.innerHTML = 'Play'; //Button turns to Play when it's clicked
+playing = false;
+clearInterval(imageID);
+},
+
+playSlideshow: function() { //This is the play function re-sets the interval that causes the function to autoplay.
+pauseButton.innerHTML = 'Pause'; //Button turns to Pause when the button is clicked
+playing = true;
+imageID = setInterval(slide.changeImg, time);
+},
+
+remove: function() { //This function is used to delete the current image index from the slideshow
+delete images[i];
+},
+
+setImg: function() { //This fucntion retrieves the image path
+slider_img.setAttribute('src', 'data/GEOS_FP/'+images[i]);
+}
+}
+
+global.JaiylonSlideshow = global.ProjectAlias = JaiylonSlideshow;
+let slide = new JaiylonSlideshow();
+imageID = setInterval(slide.changeImg, time);
+let nextBtn = document.querySelector('#nextBtn');
+nextBtn.addEventListener('click', function() {
+slide.next();
+})
+
+let prevBtn = document.querySelector('#prevBtn');
+prevBtn.addEventListener('click', function() {
+slide.prev();
+})
+
+let pause = document.querySelector('#pause');
+pause.addEventListener('click', function() {
+if (playing) {
+slide.pauseSlideshow();
+} else {
+slide.playSlideshow();
+}
+})
+
+let removeBtn = document.querySelector('#removeBtn');
+removeBtn.addEventListener('click', function() {
+alert('click');
+slide.remove();
+})
+
+})(window);
+</script>
+
+<div id="map2">
+  <script src="geos-fp-leaf.js"></script>
+</div>
+
+</body>
+</html>

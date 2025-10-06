@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PurpleAir PM2.5 Map</title>
+
+  <!-- Leaflet & Font Awesome -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+    }
+
+
+    #sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 260px;
+      height: 100vh;
+      background: #f4f4f4;
+      border-right: 1px solid #ccc;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    #map2 {
+      margin-left: 260px;
+      height: 100vh;
+      width: calc(100vw - 260px);
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 1.25em;
+    }
+
+    .leaflet-popup-content {
+  max-height: 300px;        /* adjust as needed */
+  overflow-y: auto;         /* enables vertical scroll */
+  overflow-x: auto;       
+}
+
+.custom-popup .leaflet-popup-content-wrapper {
+  max-width: 300px;         /* control overall width */
+  padding: 1px;
+  border-radius: 0px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+    .scale-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin: 15px 0;
+    }
+
+    .scale-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      font-size: 1em;
+      font-weight: bold;
+      border-radius: 4px;
+      color: white;
+      border: 1px solid rgba(0,0,0,0.1);
+      cursor: default;
+    }
+
+    .scale-segment[title] {
+      position: relative;
+    }
+
+    #pm25-indicator {
+      margin-top: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #last-updated {
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    #info{
+      margin-top: 15px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    a {
+      display: block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #236192;
+      font-weight: bold;
+    }
+
+    a:hover {
+      color: #003e6b;
+    }
+
+    label {
+      margin-top: 15px;
+      display: block;
+      font-size: 0.95em;
+    }
+
+    @media (max-width: 700px) {
+      #sidebar {
+        position: static;
+        width: 100vw;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 10px;
+      }
+      #map2 {
+        margin-left: 0;
+        width: 100vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="sidebar">
+
+  <div id="pm25-indicator">Click a marker for PM2.5</div>
+  <div id="last-updated"></div>
+
+  <a href="HOME.html">← Home Page</a>
+
+  <p style="font-size: 0.9em; margin-top: 15px;">
+    If the page is not displaying sensors, the data is still being imported. Try waiting 30 seconds and refreshing the page.
+  </p>
+
+  <label>
+    <input type="checkbox" id="toggle-dec-only" />
+    Show only DEC
+  </label>
+
+  <div id="info">
+    <p>This map displays real-time data for PM2.5 ground sensors in Alaska. Click a location to view information for the sensor.</p>
+  </div>
+</div>
+
+<div id="map2"></div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="purple_map.js"></script>
+</body>
+</html>
+
+
+

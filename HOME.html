@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: url('fireaq_repo/fireaq/q_70.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #222;
+    }
+
+    .sidenav {
+      height: 100%;
+      width: 220px;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background: rgba(35, 97, 146, 0.95);
+      overflow-x: hidden;
+      padding-top: 20px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+    }
+
+    .sidenav a,
+    .dropdown-btn {
+      padding: 10px 16px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #FFCD00;
+      display: block;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidenav a:hover,
+    .dropdown-btn:hover {
+      color: white;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .maincontent {
+      margin-left: 240px;
+      padding: 40px 30px 30px 30px;
+      min-height: 100vh;
+      background: rgba(255,255,255,0.85);
+      border-radius: 18px;
+      max-width: 900px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .active {
+      background-color: #FFCD00;
+      color: #236192 !important;
+    }
+
+    .dropdown-container {
+      display: none;
+      background-color: #2d3e50;
+      padding-left: 12px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .fa-caret-down {
+      float: right;
+      padding-right: 8px;
+    }
+
+    .btn {
+      border: none;
+      outline: none;
+      background-color: #236192;
+      padding: 10px 30px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      margin: 10px auto;
+      border-radius: 50px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #FFCD00;
+      color: #236192;
+    }
+
+    .feature-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .feature-item {
+      text-align: center;
+      flex: 1 1 200px;
+      max-width: 240px;
+    }
+
+    .feature-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .feature-item img:hover {
+      transform: scale(1.05);
+    }
+
+    .feature-item p {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #236192;
+      font-weight: 500;
+    }
+
+    @media screen and (max-width: 700px) {
+      .sidenav {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: none;
+      }
+
+      .maincontent {
+        margin-left: 0;
+        margin-top: 0;
+        border-radius: 0;
+        max-width: 100%;
+        padding: 16px 6px;
+      }
+
+      .feature-item {
+        max-width: 100%;
+        flex: 1 1 100%;
+      }
+    }
+
+    @media screen and (max-height: 450px) {
+      .sidenav {padding-top: 15px;}
+      .sidenav a {font-size: 18px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="sidenav">
+    <center>
+      <img src="pics/UAFLogo_A_116.png" id="logo" alt="UAF Logo" width="170" height="170" />
+    </center>
+    <a href="HOME.html">Home</a>
+    <button class="dropdown-btn">PM2.5 Forecast
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-container">
+      <a href="GEOS-FP-LEAF.html">GEOS-FP</a>
+      <a href="GEOS-CF.html">GEOS-CF</a>
+      <a href="HRRR-SMOKE.html">HRRR-Smoke</a>
+      <a href="PURPLE.html">Purple Air</a>
+    </div>
+    <a href="AOD.html">AOD</a>
+    <a href="ABOUT.html">About</a>
+  </div>
+
+  <div class="maincontent">
+    <div id="Welcome_Words" style="width:100%; text-align:center">
+      <h1 style="font-weight:600; color:#236192;">Air Quality Forecasts for Alaska</h1>
+      <h2 style="font-weight:400; color:#444;">
+        Welcome to the website. <br>
+        This website provides 3-day forecast for Alaska so you can make decisions on your trip!
+      </h2>
+    </div>
+
+    <div class="feature-previews">
+      <div class="feature-item">
+        <a href="HRRR-SMOKE.html">
+          <img src="hrrr_thumb.png" alt="Forecast Map">
+        </a>
+        <p>2-Day PM2.5 (Smoke) Forecast</p>
+      </div>
+      <div class="feature-item">
+        <a href="GEOS-FP-LEAF.html">
+          <img src="geos_thumb.png" alt="Air Quality Observation">
+        </a>
+        <p>3-Day Air Quality Forecast | GEOS-FP</p>
+      </div>
+      <div class="feature-item">
+        <a href="PURPLE.html">
+          <img src="purpleAir.png" alt="Purple Air">
+        </a>
+        <p>Ground Sensor PM2.5</p>
+      </div>
+      <div class="feature-item">
+        <a href="GEOS-CF.html">
+          <img src="geos-cf-preview.png" alt="GEOS-CF">
+        </a>
+        <p>3-Day Air Quality Forecast | GEOS-CF</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dropdown logic
+    const dropdowns = document.getElementsByClassName("dropdown-btn");
+    for (let i = 0; i < dropdowns.length; i++) {
+      dropdowns[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+        const dropdownContent = this.nextElementSibling;
+        dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>AOD Viewer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    html, body { height:100%; margin:0; }
+    #sidebar {
+      position:absolute; top:0; left:0; width:280px; bottom:0;
+      overflow:auto; background:#f5f5f5; padding:10px;
+      font-family:sans-serif; border-right:1px solid #ccc;
+    }
+    #map5 { position:absolute; top:0; bottom:0; left:280px; right:0; }
+    .group h3 {
+      margin:0; padding:6px 10px; background:#ddd;
+      cursor:pointer; user-select:none;
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:16px;
+    }
+    .arrow { font-size:14px; transition: transform 0.2s ease; }
+    .arrow.open { transform: rotate(90deg); }
+    .layer-list {
+      list-style:none; padding:4px 0 4px 15px; margin:0;
+      display:none; background:#eee;
+    }
+    .layer-list li {
+      padding:4px 6px; cursor:pointer; border-radius:4px;
+    }
+    .layer-list li:hover {
+      background-color: #cce4ff;
+    }
+    .layer-list li.active {
+      font-weight:bold; background:#a6d4fa;
+      position:relative;
+    }
+    .layer-list li div:last-child {
+      font-size: 10px; color: #555;
+    }
+    .loading {
+      position:absolute;
+      top:10px; right:10px;
+      background:white;
+      border:1px solid #aaa;
+      padding:5px 10px;
+      font-size:12px;
+      border-radius:5px;
+      display:none;
+      z-index:1001;
+    }
+    .legend-gradient {
+      width: 260px;
+      height: 20px;
+      background: linear-gradient(to right, indigo, blue, green, yellow, orange, red, deeppink, hotpink);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 4px 0;
+    }
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-family: sans-serif;
+    }
+    .legend-container {
+      padding: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font: 12px sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="sidebar"><div id="layerMenu"></div>
+        <a href="HOME.html">← Home Page</a>
+        </div>
+  <div id="map5"></div>
+  <div id="loading" class="loading">Loading...</div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.10/dist/esri-leaflet.js"></script>
+
+  <script>
+    const map = L.map('map5').setView([20, 0], 2);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19,
+      noWrap: true
+    }).addTo(map);
+
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function () {
+      const div = L.DomUtil.create('div');
+      div.innerHTML = `<div class="legend-container">
+        <div style="text-align: center; font-weight: bold; margin-bottom: 5px;">
+          Aerosol Optical Depth at 550 nm
+        </div>
+        <div class="legend-gradient"></div>
+        <div class="legend-labels">
+          <span>0.25</span>
+          <span>0.5</span>
+          <span>0.75</span>
+          <span>1</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+        </div>
+      </div>`;
+      return div;
+    };
+    legend.addTo(map);
+
+    const SERVICE_URL = 'https://fire-dev-2.gina.alaska.edu/arcgis/rest/services/AOD_Map/MapServer';
+
+    const groups = {
+      NPP: { idRange: [1, 46], layersByDate: new Map() },
+      N20: { idRange: [95, 141], layersByDate: new Map() },
+      N21: { idRange: [48, 93], layersByDate: new Map() }
+    };
+
+    const activeGroupLayers = { NPP: new Map(), N20: new Map(), N21: new Map() };
+
+    function extractDate(layerName) {
+      const match = layerName.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+      if (match) {
+        const [_, mm, dd, yyyy] = match;
+        return `${yyyy}-${mm}-${dd}`;
+      }
+      return null;
+    }
+
+    function fetchAndBuild() {
+      fetch(SERVICE_URL + '?f=json')
+        .then(r => r.json())
+        .then(data => {
+          data.layers.forEach(l => {
+            for (const key in groups) {
+              const [min, max] = groups[key].idRange;
+              if (l.id >= min && l.id <= max) {
+                const date = extractDate(l.name);
+                if (!date) continue;
+                const dateMap = groups[key].layersByDate;
+                if (!dateMap.has(date)) dateMap.set(date, []);
+                dateMap.get(date).push({ id: l.id, name: l.name });
+              }
+            }
+          });
+          buildSidebar();
+        })
+        .catch(console.error);
+    }
+
+    function buildSidebar() {
+      const menu = document.getElementById('layerMenu');
+      menu.innerHTML = '';
+
+      for (const key in groups) {
+        const group = groups[key];
+        const div = document.createElement('div');
+        div.className = 'group';
+
+        const h3 = document.createElement('h3');
+        const arrow = document.createElement('span');
+        arrow.className = 'arrow';
+        arrow.textContent = '▶';
+        h3.appendChild(document.createTextNode(key));
+        h3.appendChild(arrow);
+        div.appendChild(h3);
+
+        const ul = document.createElement('ul');
+        ul.className = 'layer-list';
+
+        [...group.layersByDate.entries()]
+          .sort((a, b) => b[0].localeCompare(a[0]))
+          .forEach(([date, layers]) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<div>${date}</div><div>${layers.map(l => l.name).join(', ')}</div>`;
+            li.onclick = () => toggleLayer(group, key, date, li);
+            ul.appendChild(li);
+          });
+
+        h3.onclick = () => {
+          const open = ul.style.display === 'block';
+          ul.style.display = open ? 'none' : 'block';
+          arrow.classList.toggle('open', !open);
+        };
+
+        div.appendChild(ul);
+        menu.appendChild(div);
+      }
+    }
+
+    function toggleLayer(group, groupKey, date, liDOM) {
+      const loading = document.getElementById('loading');
+      const isActive = activeGroupLayers[groupKey].has(date);
+
+      if (isActive) {
+        loading.style.display = 'block';
+        const layers = activeGroupLayers[groupKey].get(date);
+        layers.forEach(l => map.removeLayer(l));
+        activeGroupLayers[groupKey].delete(date);
+        liDOM.classList.remove('active');
+        loading.style.display = 'none';
+      } else {
+        loading.style.display = 'block';
+        const layers = group.layersByDate.get(date);
+        const layerObjs = [];
+        let loadedCount = 0;
+        layers.forEach(layerInfo => {
+          const layer = L.esri.dynamicMapLayer({
+            url: SERVICE_URL,
+            layers: [layerInfo.id],
+            opacity: 0.6
+          }).addTo(map);
+
+          layer.on('load', () => {
+            loadedCount++;
+            if (loadedCount === layers.length) {
+              loading.style.display = 'none';
+            }
+          });
+
+          layerObjs.push(layer);
+        });
+        activeGroupLayers[groupKey].set(date, layerObjs);
+        liDOM.classList.add('active');
+      }
+    }
+
+    fetchAndBuild();
+  </script>
+</body>
+</html>
