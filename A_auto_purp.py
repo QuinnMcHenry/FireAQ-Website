@@ -9,8 +9,6 @@ import json
 import glob
 import re
 
-# quinns key: C48C707A-4C6B-11F0-81BE-42010A80001F
-# Jingqiu key: 4F15D3C5-51F3-11F0-81BE-42010A80001F
 
 # Get today's date for filenames
 today_str = datetime.datetime.today().strftime('%Y%m%d')
@@ -25,7 +23,7 @@ if not os.path.exists(dir_PurpleAir_merge):
     os.makedirs(dir_PurpleAir_merge)
 
 # Get sensor metadata
-my_headers = {'Content-Type':'application/json','X-API-Key' : '4F15D3C5-51F3-11F0-81BE-42010A80001F',
+my_headers = {'Content-Type':'application/json',{api_key},
               'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'}
 
 purple_request = (
