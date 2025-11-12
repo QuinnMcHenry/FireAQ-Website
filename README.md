@@ -1,5 +1,5 @@
 # FireAQ-Website
-A dynamic website featuring live-updating JavaScript maps powered by ArcGIS/Arc data feeds.
+A website featuring NRT JavaScript maps powered by ArcGIS data feeds.
 
 
-# http://fireaq.alaska.edu
+# https://fireaq.alaska.edu
